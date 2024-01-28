@@ -1,190 +1,245 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const Myapp());
+  runApp(const WeatherApp());
 }
 
-class Myapp extends StatelessWidget {
-  const Myapp({super.key});
+class WeatherApp extends StatelessWidget {
+  const WeatherApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(scaffoldBackgroundColor: Color(hexColor('#f94144'))),
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Weather',
+            'Weather Forecast',
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
           centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 0, 48, 2),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-          actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
-          ],
+          backgroundColor: Color(hexColor('#d00000')),
         ),
-        body: _buildBody(),
+        body: _bodyWeather(),
       ),
     );
   }
 }
 
-Widget _buildBody() {
+int hexColor(String color) {
+  String newColor = '0xff' + color;
+  newColor = newColor.replaceAll('#', '');
+  int finalColor = int.parse(newColor);
+  return finalColor;
+}
+
+Widget _bodyWeather() {
   return SingleChildScrollView(
-    child: Column(children: [
-      _headerImage(),
-      SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _weatherDescription(),
-              const Divider(),
-              _temperature(),
-              const Divider(),
-              _temperatureForecast(),
-              const Divider(),
-              _footerRatings()
-            ],
+    child: SizedBox(
+      height: 1000,
+      width: 400,
+      child: Column(children: [
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _search(),
+                Divider(
+                  color: Color(hexColor('#d00000')),
+                  height: 30,
+                ),
+                _city(),
+                Divider(
+                  color: Color(hexColor('#d00000')),
+                  height: 30,
+                ),
+                _temperatureDetail(),
+                Divider(
+                  color: Color(hexColor('#d00000')),
+                  height: 30,
+                ),
+                _extraWeather(),
+                Divider(
+                  color: Color(hexColor('#d00000')),
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    ]),
-  );
-}
-
-Image _headerImage() {
-  return const Image(
-    image: NetworkImage(
-        'https://images.unsplash.com/photo-1431794062232-2a99a5431c6c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-    fit: BoxFit.cover,
-  );
-}
-
-Column _weatherDescription() {
-  return const Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: <Widget>[
-      Text(
-        'Tuesday - May 22',
-        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-      ),
-      Divider(),
-      Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sed justo placerat, laoreet mauris sed, luctus erat. Sed in felis eu libero vestibulum faucibus at.',
-        style: TextStyle(color: Colors.black54),
-      )
-    ],
-  );
-}
-
-Row _temperature() {
-  return const Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Column(
-        children: [
-          Icon(
-            Icons.sunny,
-            color: Colors.yellow,
-            size: 30,
-          )
-        ],
-      ),
-      SizedBox(
-        width: 20.0,
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '15° Clear',
-                style: TextStyle(color: Colors.deepPurple, fontSize: 18),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                'Jambyl, Taraz',
-                style: TextStyle(color: Colors.grey),
-              )
-            ],
-          )
-        ],
-      )
-    ],
-  );
-}
-
-Wrap _temperatureForecast() {
-  return Wrap(
-    spacing: 10.0,
-    children: List.generate(
-      7,
-      (int index) {
-        return Chip(
-          label: Text(
-            '${index + 20}°C',
-            style: const TextStyle(fontSize: 10),
-          ),
-          avatar: const Icon(Icons.wb_cloudy),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: const BorderSide(color: Colors.grey)),
-          backgroundColor: Colors.grey.shade100,
-        );
-      },
+        _forecastWeather(),
+        SizedBox(
+          height: 130,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemExtent: 170,
+              itemCount: 7,
+              itemBuilder: ((context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: ListTile(
+                    tileColor: Color(hexColor('#e57373')),
+                    title: const Padding(
+                      padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                      child: Text(
+                        'Friday',
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    subtitle: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '6 °F',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 30),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.wb_sunny,
+                          color: Colors.white,
+                          size: 40,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              })),
+        )
+      ]),
     ),
   );
 }
 
-Row _footerRatings() {
-  var stars = Row(
-    mainAxisSize: MainAxisSize.min,
+Row _search() {
+  return const Row(
+    mainAxisAlignment: MainAxisAlignment.start,
     children: [
       Icon(
-        Icons.star,
-        size: 20,
-        color: Colors.yellow[600],
+        Icons.search,
+        color: Colors.white,
       ),
+      SizedBox(width: 20),
+      Text(
+        'Enter City Name',
+        style: TextStyle(fontSize: 20, color: Colors.white),
+      )
+    ],
+  );
+}
+
+Row _city() {
+  return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    Column(
+      children: [
+        const Text(
+          'District of Jambyl, KZ',
+          style: TextStyle(
+              fontSize: 30, color: Colors.white, fontWeight: FontWeight.w300),
+        ),
+        Text(
+          'Sunday, Jan 28, 2024',
+          style: TextStyle(fontSize: 15, color: Color(hexColor('#dee2e6'))),
+        )
+      ],
+    ),
+  ]);
+}
+
+Row _temperatureDetail() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
       Icon(
-        Icons.star,
-        size: 20,
-        color: Colors.yellow[600],
+        Icons.wb_sunny,
+        color: Color(hexColor('#ffffff')),
+        size: 60,
       ),
-      Icon(
-        Icons.star,
-        size: 20,
-        color: Colors.yellow[600],
-      ),
-      const Icon(
-        Icons.star,
-        size: 20,
-        color: Colors.black,
-      ),
-      const Icon(
-        Icons.star,
-        size: 20,
-        color: Colors.black,
+      const SizedBox(width: 20),
+      const Column(
+        children: [
+          Text(
+            '20 °F',
+            style: TextStyle(
+                fontSize: 45, color: Colors.white, fontWeight: FontWeight.w300),
+          ),
+          Text(
+            'LIGHT SNOW',
+            style: TextStyle(
+                fontSize: 15, color: Colors.white, fontWeight: FontWeight.w300),
+          )
+        ],
       ),
     ],
   );
-  return Row(
+}
+
+Row _extraWeather() {
+  return const Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: <Widget>[
-      const Text(
-        'to learn more: weather.com',
-        style: TextStyle(fontSize: 16),
+    children: [
+      Column(
+        children: [
+          Icon(
+            Icons.ac_unit,
+            color: Colors.white,
+            size: 25,
+          ),
+          Text(
+            '5 km/hr',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w300, fontSize: 15),
+          ),
+        ],
       ),
-      stars
+      Column(
+        children: [
+          Icon(
+            Icons.wb_cloudy,
+            color: Colors.white,
+            size: 25,
+          ),
+          Text(
+            '18 m/s',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w300, fontSize: 15),
+          ),
+        ],
+      ),
+      Column(
+        children: [
+          Icon(
+            Icons.water_drop,
+            color: Colors.white,
+            size: 25,
+          ),
+          Text(
+            '80%',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w300, fontSize: 15),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Column _forecastWeather() {
+  return const Column(
+    children: [
+      Text(
+        '7-DAY WEATHER FORECAST',
+        style: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.w300, fontSize: 20),
+      ),
     ],
   );
 }
